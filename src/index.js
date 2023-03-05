@@ -1,15 +1,19 @@
 const path = require('path');
 const express = require('express');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const hbs = require('express-handlebars');
 
 const app = express();
 const port = 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(express.json());
 
 // HTTP logger
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 // Template engine
 app.engine('hbs', hbs.engine({
@@ -23,8 +27,15 @@ app.get('/', (req, res) => {
     res.render('home')
 });
 app.get('/news', (req, res) => {
-    // res.send('Hello World!')
     res.render('news')
+});
+app.get('/search', (req, res) => {
+    console.log('search: ', req.query)
+    res.render('search')
+});
+app.post('/search', (req, res) => {
+    console.log("req: ", req.body)
+    res.send('')
 });
 
 app.listen(port, () => {
